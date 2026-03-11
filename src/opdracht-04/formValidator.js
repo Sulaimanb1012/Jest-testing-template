@@ -1,50 +1,54 @@
+// formValidator.js
+
 /**
- * Valideert een email adres
+ * Controleer of email geldig is
+ * @param {string} email
+ * @returns {boolean}
  */
 export function isValidEmail(email) {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
 /**
- * Valideert een Nederlands telefoonnummer
+ * Controleer of telefoonnummer geldig is
+ * Geldige vormen: 0612345678 of 06-1234-5678
+ * @param {string} phone
+ * @returns {boolean}
  */
 export function isValidPhone(phone) {
-  // Verwijder spaties en streepjes
-  const cleaned = phone.replace(/[\s-]/g, '');
-  // Check of het 10 cijfers is en begint met 06 of 31
-  return /^(06|31)\d{8}$/.test(cleaned);
+  // Regex accepteert beide vormen
+  return /^0\d{1}-?\d{4}-?\d{4}$/.test(phone);
 }
 
 /**
- * Valideert een Nederlandse postcode
+ * Controleer of postcode geldig is
+ * Geldige vormen: 1234 AB of 1234AB
+ * @param {string} postcode
+ * @returns {boolean}
  */
 export function isValidPostcode(postcode) {
-  // Format: 1234 AB of 1234AB
-  const cleaned = postcode.replace(/\s/g, '').toUpperCase();
-  return /^\d{4}[A-Z]{2}$/.test(cleaned);
+  return /^\d{4}\s?[A-Za-z]{2}$/.test(postcode);
 }
 
 /**
- * Valideert een volledig formulier
+ * Valideer een formulier object
+ * @param {object} data - {email, phone, postcode}
+ * @returns {string[]} array met foutmeldingen, of leeg als alles geldig
  */
-export function validateForm(formData) {
+export function validateForm(data) {
   const errors = [];
-  
-  if (!isValidEmail(formData.email)) {
-    errors.push('Ongeldig email adres');
+
+  if (!isValidEmail(data.email)) {
+    errors.push('Ongeldig emailadres');
   }
-  
-  if (!isValidPhone(formData.phone)) {
+
+  if (!isValidPhone(data.phone)) {
     errors.push('Ongeldig telefoonnummer');
   }
-  
-  if (!isValidPostcode(formData.postcode)) {
+
+  if (!isValidPostcode(data.postcode)) {
     errors.push('Ongeldige postcode');
   }
-  
-  return {
-    isValid: errors.length === 0,
-    errors: errors
-  };
+
+  return errors; // altijd een array teruggeven!
 }
